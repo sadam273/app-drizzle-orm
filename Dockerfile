@@ -12,4 +12,4 @@ RUN npm run build
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "npm run db:migrate && node dist/index.js"]
+CMD ["sh", "-c", "until nc -z db 5432; do echo 'waiting db...'; sleep 2; done; npm run db:migrate && node dist/index.js"]
