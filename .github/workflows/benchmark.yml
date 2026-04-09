@@ -30,6 +30,10 @@ jobs:
       - name: Build and start services
         run: docker compose up -d --build
 
+      # show logs
+      - name: Show logs
+        run: docker compose logs app
+
       # 4. Debug containers (optional tapi penting buat validasi)
       - name: Show running containers
         run: docker ps
