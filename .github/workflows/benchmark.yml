@@ -35,8 +35,19 @@ jobs:
         run: docker compose logs app
 
       # 4. Debug containers (optional tapi penting buat validasi)
-      - name: Show running containers
-        run: docker ps
+      - name: Debug app startup
+        run: |
+          echo "=== Docker processes ==="
+          docker ps -a
+
+          echo "=== App logs ==="
+          docker compose logs app
+
+          echo "=== DB logs ==="
+          docker compose logs db
+
+          echo "=== App health status ==="
+          docker inspect --format='{{json .State}}' $(docker compose ps -q app)
 
       # 5. Wait for services ready
       - name: Wait for services
