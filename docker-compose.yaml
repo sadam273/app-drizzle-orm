@@ -43,6 +43,8 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
+
     depends_on:
       - cadvisor
     restart: unless-stopped
