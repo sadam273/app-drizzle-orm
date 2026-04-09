@@ -3,11 +3,19 @@ name: Benchmark
 on:
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   benchmark:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      # 2. Install k6
       - name: Install k6
         run: |
           sudo apt-get update
@@ -18,13 +26,16 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y k6
 
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
+      # 3. Start services
       - name: Build and start services
         run: docker compose up -d --build
 
-      - name: Wait for services to be ready
+      # 4. Debug containers (optional tapi penting buat validasi)
+      - name: Show running containers
+        run: docker ps
+
+      # 5. Wait for services ready
+      - name: Wait for services
         run: |
           echo "Waiting for app..."
           sleep 10
@@ -33,20 +44,29 @@ jobs:
           echo "Waiting for Prometheus..."
           curl --retry 10 --retry-delay 3 --retry-connrefused http://localhost:9090
 
+      # 6. Setup Python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
+      # 7. Install dependencies
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Run run-test.py
+      # 8. Run load test (k6 via python)
+      - name: Run benchmark test
         run: python metrics/run-test.py
 
-      - name: Run export-metrics.py
+      # 9. Kasih waktu Prometheus scrape data terakhir
+      - name: Wait before exporting metrics
+        run: sleep 10
+
+      # 10. Export metrics ke CSV
+      - name: Export metrics
         run: python metrics/export-metrics.py
 
+      # 11. Upload hasil benchmark
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
