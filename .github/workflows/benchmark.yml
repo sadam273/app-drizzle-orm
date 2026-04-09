@@ -31,8 +31,11 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Run benchmark
-        run: python benchmark.py
+      - name: Run run-test.py
+        run: python metrics/run-test.py
+
+      - name: Run export-metrics.py
+        run: python metrics/export-metrics.py
 
       - name: Upload results
         uses: actions/upload-artifact@v4
