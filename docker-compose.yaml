@@ -11,14 +11,7 @@ services:
       DB_PASSWORD: root
       DB_NAME: movie_loan
     depends_on:
-      - db:
-        condition: service_healthy # ← tunggu DB beneran ready
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
+      - db
 
   db:
     image: postgres:15

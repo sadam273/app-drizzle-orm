@@ -53,12 +53,30 @@ jobs:
       - name: Wait for services
         run: |
           echo "Waiting for app..."
-          sleep 10
-          curl --retry 10 --retry-delay 3 --retry-connrefused http://localhost:3000
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000/ > /dev/null 2>&1; then
+              echo "App ready!"
+              break
+            fi
+            echo "Attempt $i/30 - not ready yet, waiting 5s..."
+            if [ $i -eq 30 ]; then
+              echo "TIMEOUT - dumping logs:"
+              docker compose logs app
+              docker compose logs db
+              exit 1
+            fi
+            sleep 5
+          done
 
           echo "Waiting for Prometheus..."
-          curl --retry 10 --retry-delay 3 --retry-connrefused http://localhost:9090
-
+          for i in $(seq 1 20); do
+            if curl -sf http://localhost:9090/-/ready > /dev/null 2>&1; then
+              echo "Prometheus ready!"
+              break
+            fi
+            echo "Attempt $i/20..."
+            sleep 3
+          done
       # 6. Setup Python
       - name: Set up Python
         uses: actions/setup-python@v5
