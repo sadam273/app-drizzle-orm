@@ -34,6 +34,11 @@ jobs:
       - name: Show logs
         run: docker compose logs app
 
+      - name: Test curl
+        run: |
+          curl -v http://localhost:3000
+          docker compose logs --tail=10 app
+
       # 4. Debug containers (optional tapi penting buat validasi)
       - name: Debug app startup
         run: |
