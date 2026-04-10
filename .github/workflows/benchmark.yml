@@ -34,10 +34,11 @@ jobs:
       - name: Show logs
         run: docker compose logs app
 
-      - name: Test curl
-        run: |
-          curl -v http://localhost:3000
-          docker compose logs --tail=10 app
+      # # debug again
+      # - name: Test curl
+      #   run: |
+      #     curl -v http://localhost:3000
+      #     docker compose logs --tail=10 app
 
       # 4. Debug containers (optional tapi penting buat validasi)
       - name: Debug app startup
@@ -59,14 +60,14 @@ jobs:
         run: |
           echo "Waiting for app..."
           for i in $(seq 1 60); do
-            if curl -sf http://localhost:3000/ > /dev/null 2>&1; then
+            if curl -sf --ipv4 http://localhost:3000 > /dev/null 2>&1; then
               echo "App ready!"
               break
             fi
             echo "Attempt $i/60 - not ready yet..."
-            docker compose logs --tail=5 app   # ← tambahin ini
+            docker compose logs --tail=3 app
             if [ $i -eq 60 ]; then
-              echo "TIMEOUT - full logs:"
+              echo "TIMEOUT"
               docker compose logs app
               docker compose logs db
               exit 1
