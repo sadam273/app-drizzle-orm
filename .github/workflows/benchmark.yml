@@ -53,14 +53,15 @@ jobs:
       - name: Wait for services
         run: |
           echo "Waiting for app..."
-          for i in $(seq 1 30); do
+          for i in $(seq 1 60); do
             if curl -sf http://localhost:3000/ > /dev/null 2>&1; then
               echo "App ready!"
               break
             fi
-            echo "Attempt $i/30 - not ready yet, waiting 5s..."
-            if [ $i -eq 30 ]; then
-              echo "TIMEOUT - dumping logs:"
+            echo "Attempt $i/60 - not ready yet..."
+            docker compose logs --tail=5 app   # ← tambahin ini
+            if [ $i -eq 60 ]; then
+              echo "TIMEOUT - full logs:"
               docker compose logs app
               docker compose logs db
               exit 1
