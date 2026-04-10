@@ -30,32 +30,7 @@ jobs:
       - name: Build and start services
         run: docker compose up -d --build
 
-      # show logs
-      - name: Show logs
-        run: docker compose logs app
-
-      # # debug again
-      # - name: Test curl
-      #   run: |
-      #     curl -v http://localhost:3000
-      #     docker compose logs --tail=10 app
-
-      # 4. Debug containers (optional tapi penting buat validasi)
-      - name: Debug app startup
-        run: |
-          echo "=== Docker processes ==="
-          docker ps -a
-
-          echo "=== App logs ==="
-          docker compose logs app
-
-          echo "=== DB logs ==="
-          docker compose logs db
-
-          echo "=== App health status ==="
-          docker inspect --format='{{json .State}}' $(docker compose ps -q app)
-
-      # 5. Wait for services ready
+      # 4. Wait for services ready
       - name: Wait for services
         run: |
           echo "Waiting for app..."
@@ -77,36 +52,37 @@ jobs:
 
           echo "Waiting for Prometheus..."
           for i in $(seq 1 20); do
-            if curl -sf http://localhost:9090/-/ready > /dev/null 2>&1; then
+            if curl -sf --ipv4 http://localhost:9090/-/ready > /dev/null 2>&1; then
               echo "Prometheus ready!"
               break
             fi
             echo "Attempt $i/20..."
             sleep 3
           done
-      # 6. Setup Python
+
+      # 5. Setup Python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      # 7. Install dependencies
+      # 6. Install dependencies
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      # 8. Run load test (k6 via python)
+      # 7. Run load test (k6 via python)
       - name: Run benchmark test
         run: python metrics/run-test.py
 
-      # 9. Kasih waktu Prometheus scrape data terakhir
+      # 8. Kasih waktu Prometheus scrape data terakhir
       - name: Wait before exporting metrics
         run: sleep 10
 
-      # 10. Export metrics ke CSV
+      # 9. Export metrics ke CSV
       - name: Export metrics
         run: python metrics/export-metrics.py
 
-      # 11. Upload hasil benchmark
+      # 10. Upload hasil benchmark
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
