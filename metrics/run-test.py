@@ -1,13 +1,18 @@
 import subprocess
 import datetime
 import time
+import os
+
+# Cari lokasi absolut folder 'metrics' tempat script ini berada, lalu arahkan ke 'k6/read.js'
+base_dir = os.path.dirname(os.path.abspath(__file__))
+k6_script_path = os.path.join(base_dir, "..", "k6", "read.js")
 
 # Catat waktu start
 start_time = datetime.datetime.utcnow()
 print(f"Test started at: {start_time.isoformat()}Z")
 
-# Jalankan k6
-subprocess.run(["k6", "run", "../k6/read.js"])
+# Jalankan k6 (sekarang jalurnya sudah anti-nyasar)
+subprocess.run(["k6", "run", k6_script_path])
 
 # Catat waktu end
 end_time = datetime.datetime.utcnow()
