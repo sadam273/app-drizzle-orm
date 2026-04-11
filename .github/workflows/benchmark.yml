@@ -35,7 +35,7 @@ jobs:
         run: |
           echo "Waiting for app..."
           for i in $(seq 1 60); do
-            if curl -sf --ipv4 http://localhost:3000 > /dev/null 2>&1; then
+            if curl -sf --ipv4 http://localhost:3000/movies > /dev/null 2>&1; then
               echo "App ready!"
               break
             fi
