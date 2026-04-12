@@ -6,7 +6,7 @@ import csv
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 k6_script_path = os.path.join(base_dir, "..", "k6", "read.js")
-csv_output_path = os.path.join(base_dir, "response_time_result.csv")
+csv_output_path = os.path.join(base_dir, "..", "response_time_result.csv")
 
 start_time = datetime.datetime.utcnow()
 print(f"Test started at: {start_time.isoformat()}Z")
