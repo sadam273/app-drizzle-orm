@@ -2,6 +2,7 @@ import subprocess
 import datetime
 import time
 import os
+import csv
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 k6_script_path = os.path.join(base_dir, "..", "k6", "read.js")
