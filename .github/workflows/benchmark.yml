@@ -82,6 +82,9 @@ jobs:
       - name: Export metrics
         run: python metrics/export-metrics.py
 
+      - name: Clean k6 Response Time Data
+        run: python metrics/clean-data.py
+
       # 10. Upload hasil benchmark
       - name: Upload results
         uses: actions/upload-artifact@v4
