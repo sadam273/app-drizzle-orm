@@ -39,7 +39,7 @@ def export_csv(filename, metric_query, label):
 # CPU Utilization
 export_csv(
     "cpu_usage.csv",
-    f'rate(container_cpu_usage_seconds_total{{container_label_com_docker_compose_service="app"}}[1m])',
+    f'rate(container_cpu_usage_seconds_total{{container_label_com_docker_compose_service="app"}}[2s])',
     "cpu_usage"
 )
 
