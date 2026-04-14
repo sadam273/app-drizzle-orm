@@ -1,6 +1,6 @@
 import requests
 import csv
-from datetime import datetime
+from datetime import datetime, timedelta # <--- TAMBAH timedelta DI SINI
 
 PROMETHEUS_URL = "http://localhost:9090"
 
