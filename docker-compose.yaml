@@ -30,6 +30,9 @@ services:
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.49.1
+    command:
+      - "-housekeeping_interval=1s"
+      - "-max_housekeeping_interval=1s"
     ports:
       - "8080:8080"
     volumes:
